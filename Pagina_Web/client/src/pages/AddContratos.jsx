@@ -9,7 +9,7 @@ const AddCargo = () => {
   const [selectedDocente, setSelectedDocente] = useState(""); // Estado para almacenar el docente seleccionado
   const [reqs, setReqs] = useState([]); // Estado para almacenar los tiempos
   const [selectedReq, setSelectedReq] = useState(""); // Estado para almacenar el tiempo seleccionado
-
+  
   useEffect(() => {
     // Cargar la lista de tiempos desde la base de datos al montar el componente
     axios.get("http://localhost:8800/api/docentes").then((response) => {
@@ -19,6 +19,12 @@ const AddCargo = () => {
       setReqs(response.data);
     });
   }, []);
+
+  const fechaValida = () => {
+    const fechaInicio = new Date(newContrato.FECHAINICIO);
+    const fechaFin = new Date(newContrato.FECHAFIN);
+    return fechaFin >= fechaInicio;
+  };
 
   const [newContrato, setNewContrato] = useState({
     IDDOCENTE: selectedDocente,
@@ -84,10 +90,11 @@ const AddCargo = () => {
       newContrato.FECHAFIN.trim() === "" ||
       newContrato.FECHA.trim() === "" ||
       newContrato.CERTIFICACION_PRESUPUESTARIA.trim() === "" ||
-      newContrato.ANALISTADELPROCESO.trim() === ""
+      newContrato.ANALISTADELPROCESO.trim() === "" ||
+      !fechaValida()
     ) {
       // Mostrar una advertencia o mensaje al usuario
-      alert("Por favor, llene todos los campos obligatorios.");
+      alert("Por favor, llene todos los campos obligatorios y la fecha de fin debe ser posterior a la fecha de inicio.");
       return;
     }
 
