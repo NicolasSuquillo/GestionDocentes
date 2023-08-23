@@ -4,7 +4,7 @@ import axios from "axios";
 
 const SearchContrato = () => {
   //Api creada
-  const [contr, setContr] = useState([]);
+ 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredContr, setFilteredContr] = useState([]);
   
@@ -12,14 +12,15 @@ const SearchContrato = () => {
   const [selectedDocente, setSelectedDocente] = useState([]);
   const [selectedRequerimiento, setSelectedRequerimiento] = useState([]);
   const [selectedCargo,setSelectedCargo]=useState([]);
+  const[selectedTiempo,setSelectedTiempo]=useState([]);
   useEffect(() => {
     if (selectedContractId !== null) {
       const selectedContract = filteredContr.find(contr => contr.IDCONTRATO === selectedContractId);
-      
+  
       if (selectedContract) {
         const docenteId = selectedContract.IDDOCENTE;
         const requerimientoId = selectedContract.IDREQUERIMIENTO;
-        const cargoId=selectedContract.IDCARGO;
+  
         axios
           .get(`http://localhost:8800/api/docentesc/${docenteId}`)
           .then((response) => {
@@ -31,19 +32,35 @@ const SearchContrato = () => {
             setSelectedDocente([]);
           });
   
-          axios
+        axios
           .get(`http://localhost:8800/api/requerimientosc/${requerimientoId}`)
           .then((response) => {
             console.log("Requerimiento data:", response.data);
             setSelectedRequerimiento(response.data);
   
-            // Obtener el IDCARGO de los datos de requerimiento
             const cargoId = response.data[0].IDCARGO;
             axios
               .get(`http://localhost:8800/api/cargosc/${cargoId}`)
               .then((cargoResponse) => {
                 console.log("Cargo data:", cargoResponse.data);
                 setSelectedCargo(cargoResponse.data);
+  
+                // Verificar si los datos de cargoResponse contienen la propiedad 'idtiempo'
+                if (cargoResponse.data && cargoResponse.data[0] && cargoResponse.data[0].IDTIEMPO) {
+                  const idTiempo = cargoResponse.data[0].IDTIEMPO;
+                  axios
+                    .get(`http://localhost:8800/api/tiemposc/${idTiempo}`)
+                    .then((tiempoResponse) => {
+                      console.log("Tiempo data:", tiempoResponse.data);
+                      setSelectedTiempo(tiempoResponse.data);
+                    })
+                    .catch((error) => {
+                      console.error("Error fetching tiempo data:", error);
+                      setSelectedTiempo([]);
+                    });
+                } else {
+                  console.error("No se encontró la propiedad 'idtiempo' en los datos de cargoResponse.");
+                }
               })
               .catch((error) => {
                 console.error("Error fetching cargo data:", error);
@@ -54,10 +71,11 @@ const SearchContrato = () => {
             console.error("Error fetching requerimiento data:", error);
             setSelectedRequerimiento([]);
           });
-          
+  
       }
     }
   }, [selectedContractId, filteredContr]);
+  
   
 
   
@@ -117,7 +135,9 @@ const SearchContrato = () => {
           <p>No se encontraron resultados</p>
         ) : (
           <div className="table-responsive">
+           
             <table className="content-table">
+              
               <thead>
                 <tr>
                   <th>ID Contrato</th>
@@ -151,7 +171,9 @@ const SearchContrato = () => {
     </tr>
     {selectedContractId === contr.IDCONTRATO && (
       <>
+      
         <tr>
+        <h5>Docente:</h5>
           <td colSpan="11">
             <div>
               <tr style={{border:0}}>
@@ -173,6 +195,7 @@ const SearchContrato = () => {
         {/* Mostrar las filas de requerimiento */}
         {selectedRequerimiento.map((requerimiento) => (
           <tr key={requerimiento.IDREQUERIMIENTO}>
+            <h5>Requerimiento:</h5>
             <td colSpan="11">
               <div>
                 <tr style={{border: 0}}>
@@ -190,6 +213,7 @@ const SearchContrato = () => {
        
        {selectedCargo.map((cargo) => (
           <tr key={cargo.IDCARGO}>
+            <h5>Cargo:</h5>
             <td colSpan="11">
               <div>
                 <tr style={{border:0 }}>
@@ -200,6 +224,21 @@ const SearchContrato = () => {
                 <td>NIVEL:{cargo.NIVEL}</td>
                 <td>GRADO:{cargo.GRADO}</td>
                 <td>REMUNERACION:{cargo.REMUNERACION}</td>
+                </tr> 
+              </div>
+            </td>
+          </tr>
+        ))}
+        {selectedTiempo.map((tiempo) => (
+          <tr key={tiempo.IDTIEMPO}>
+            <h5>Tiempo:</h5>
+            <td colSpan="11">
+              <div>
+                <tr style={{border:0 }}>
+                <td>ID TIEMPO:{tiempo.IDTIEMPO}</td>
+                <td>DESCRIPCION:{tiempo.DESCRIPCION}</td>
+                <td>CODIGO:{tiempo.CODIGO}</td>
+                <td>HORAS:{tiempo.HORAS}</td>
                 </tr> 
               </div>
             </td>

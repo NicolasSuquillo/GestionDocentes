@@ -277,6 +277,19 @@ routes.post('/tiempo', (req, res) => {
     });
   });
 });
+// Método GET para obtener los datos de idtiempo utilizando el IDTIEMPO como parámetro
+routes.get('/tiemposc/:idTiempo', (req, res) => {
+  const idTiempo = req.params.idTiempo;
+
+  req.getConnection((err, conn) => {
+    if (err) return res.send(err);
+
+    conn.query('SELECT * FROM tiempo WHERE IDTIEMPO = ?', [idTiempo], (err, rows) => {
+      if (err) return res.send(err);
+      res.json(rows); // Devuelve directamente el arreglo de objetos
+    });
+  });
+});
 
 // Método UPDATE para actualizar un tiempo por su codigo
 routes.put('/tiempo/:idtiempo', (req, res) => {
