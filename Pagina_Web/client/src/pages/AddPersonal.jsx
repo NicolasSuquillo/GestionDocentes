@@ -5,8 +5,9 @@ import hexagono from "../img/hexagono.png";
 
 const AddPersonal = () => {
   const [showMessage, setShowMessage] = useState(false);
+  const [mensajeValidacion, setMensajeValidacion] = useState('');
   const [newDocente, setNewDocente] = useState({
-   
+
     APELLIDOS: "",
     NOMBRES: "",
     CEDULA: "",
@@ -27,6 +28,11 @@ const AddPersonal = () => {
       ...newDocente,
       [name]: value,
     });
+    if (validarCedula(value)) {
+      setMensajeValidacion('Cédula válida');
+    } else {
+      setMensajeValidacion('Cédula inválida');
+    }
   };
 
   const handleReturn = () => {
@@ -37,7 +43,7 @@ const AddPersonal = () => {
   const handleClean = () => {
     // Limpiar el formulario después de agregar el personal
     setNewDocente({
-     
+
       APELLIDOS: "",
       NOMBRES: "",
       CEDULA: "",
@@ -56,7 +62,7 @@ const AddPersonal = () => {
   const handleAddPersonal = () => {
     // Verificar si alguno de los campos obligatorios está vacío
     if (
-      
+
       newDocente.APELLIDOS.trim() === "" ||
       newDocente.NOMBRES.trim() === "" ||
       newDocente.CEDULA.trim() === "" ||
@@ -83,7 +89,7 @@ const AddPersonal = () => {
         setShowMessage(true);
         // Limpiar el formulario después de agregar el personal
         setNewDocente({
-          
+
           APELLIDOS: "",
           NOMBRES: "",
           CEDULA: "",
@@ -106,6 +112,35 @@ const AddPersonal = () => {
       });
   };
 
+  function validarCedula(cedula) {
+    // Validar que la cédula tenga 10 dígitos
+    if (cedula.length !== 10) {
+      return false;
+    }
+
+    // Validar que los dos primeros dígitos sean válidos
+    const provincia = parseInt(cedula.substring(0, 2));
+    if (provincia < 1 || provincia > 24) {
+      return false;
+    }
+
+    // Validar el último dígito usando el algoritmo de módulo 10
+    const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+    let suma = 0;
+
+    for (let i = 0; i < 9; i++) {
+      const digito = parseInt(cedula.charAt(i)) * coeficientes[i];
+      suma += (digito < 10) ? digito : digito - 9;
+    }
+
+    const ultimoDigitoCalculado = (10 - (suma % 10)) % 10;
+    const ultimoDigitoReal = parseInt(cedula.charAt(9));
+
+    return ultimoDigitoCalculado === ultimoDigitoReal;
+    
+  }
+
+
   return (
     <section className="add-personal">
       <div className="container">
@@ -119,7 +154,7 @@ const AddPersonal = () => {
         <div className="row flex-grow-1">
           <form className="d-flex">
             <div className="col-lg-6">
-            
+
               <div class="row g-2 align-items-center">
                 <div class="col-auto">
                   <label for="apellidos" class="col-form-label">
@@ -173,6 +208,7 @@ const AddPersonal = () => {
                     onChange={handleInputChange}
                     maxLength="10"
                   />
+                  <p>{mensajeValidacion}</p>
                 </div>
               </div>
 
@@ -252,7 +288,7 @@ const AddPersonal = () => {
               </div>
             </div>
 
-           
+
 
             <div className="col-lg-6">
               <div class="row g-2 align-items-center">
@@ -262,7 +298,7 @@ const AddPersonal = () => {
                   </label>
                 </div>
                 <div class="col-auto">
-                <select
+                  <select
                     name="CIUDAD"
                     id="ciudad"
                     class="form-control"
@@ -276,7 +312,7 @@ const AddPersonal = () => {
                     <option value="Puyo">Puyo</option>
                     <option value="Latacunga">Latacunga</option>
                   </select>
-                  
+
                 </div>
               </div>
 
@@ -287,7 +323,7 @@ const AddPersonal = () => {
                   </label>
                 </div>
                 <div class="col-auto">
-                <select
+                  <select
                     name="PROVINCIA"
                     id="provincia"
                     class="form-control"
@@ -300,7 +336,7 @@ const AddPersonal = () => {
                     <option value="Pastaza">Pastaza</option>
                     <option value="Cotopaxi">Cotopaxi</option>
                   </select>
-                  
+
                 </div>
               </div>
 
@@ -328,7 +364,7 @@ const AddPersonal = () => {
               <div className="row g-2 align-items-center">
                 <div className="col-auto">
                   <label htmlFor="genero" className="col-form-label">
-                  CAMPUS*
+                    CAMPUS*
                   </label>
                 </div>
                 <div className="col-auto">

@@ -9,7 +9,7 @@ const AddCargo = () => {
   const [selectedDocente, setSelectedDocente] = useState(""); // Estado para almacenar el docente seleccionado
   const [reqs, setReqs] = useState([]); // Estado para almacenar los tiempos
   const [selectedReq, setSelectedReq] = useState(""); // Estado para almacenar el tiempo seleccionado
-  
+
   useEffect(() => {
     // Cargar la lista de tiempos desde la base de datos al montar el componente
     axios.get("http://localhost:8800/api/docentes").then((response) => {
@@ -38,7 +38,7 @@ const AddCargo = () => {
     ANALISTADELPROCESO: "",
     ARCHIVOMEMO: "",
   });
-  
+
   const handleReturn = () => {
     // Redirigir al componente de inicio de sesión
     window.location.href = "http://localhost:3000/GestionContratos";
@@ -69,23 +69,23 @@ const AddCargo = () => {
   };
 
   const cargoData = {
-      IDDOCENTE:selectedDocente,
-      IDREQUERIMIENTO:selectedReq,
-      FECHAINICIO: newContrato.FECHAINICIO,
-      FECHAFIN: newContrato.FECHAFIN,
-      FUENTE: newContrato.FUENTE,
-      FECHA: newContrato.FECHA,
-      CERTIFICACION_PRESUPUESTARIA: newContrato.CERTIFICACION_PRESUPUESTARIA,
-      IDMEMO: newContrato.IDMEMO,
-      ANALISTADELPROCESO: newContrato.ANALISTADELPROCESO,
-      ARCHIVOMEMO: newContrato.ARCHIVOMEMO
+    IDDOCENTE: selectedDocente,
+    IDREQUERIMIENTO: selectedReq,
+    FECHAINICIO: newContrato.FECHAINICIO,
+    FECHAFIN: newContrato.FECHAFIN,
+    FUENTE: newContrato.FUENTE,
+    FECHA: newContrato.FECHA,
+    CERTIFICACION_PRESUPUESTARIA: newContrato.CERTIFICACION_PRESUPUESTARIA,
+    IDMEMO: newContrato.IDMEMO,
+    ANALISTADELPROCESO: newContrato.ANALISTADELPROCESO,
+    ARCHIVOMEMO: newContrato.ARCHIVOMEMO
   };
 
   const handleAddContrato = () => {
     // Verificar si alguno de los campos obligatorios está vacío
     if (
       selectedDocente === null ||
-      selectedReq=== null ||
+      selectedReq === null ||
       newContrato.FECHAINICIO.trim() === "" ||
       newContrato.FECHAFIN.trim() === "" ||
       newContrato.FECHA.trim() === "" ||
@@ -139,7 +139,7 @@ const AddCargo = () => {
         <div className="row flex-grow-1">
           <form className="d-flex">
             <div className="col-lg-12">
-            <div className="row g-2 align-items-center">
+              <div className="row g-2 align-items-center">
                 <div className="col-auto">
                   <label htmlFor="sede" className="col-form-label">Docente*:</label>
                 </div>
@@ -158,6 +158,7 @@ const AddCargo = () => {
                       </option>
                     ))}
                   </select>
+                  
                 </div>
               </div>
 

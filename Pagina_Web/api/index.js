@@ -9,8 +9,8 @@ app.set('port',process.env.PORT || 8800)
 const dbOptions={
   host: 'localhost',
   user: 'root',
-  password: 'password',
-  database: 'gestiondocentes',
+  password: '2102',
+  database: 'gestion2',
   port: 3306
 }
 //middlaners
